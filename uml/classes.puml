@@ -1,0 +1,224 @@
+@startuml
+class Coord(@dataclass) {
+	x : int
+	y : int
+}
+abstract UserEvent {
+	+frame
+	
+}
+abstract Frame {
+	width
+	height
+	update()
+	handle_user_event()
+}
+class MainFrame {
+	width : int
+	height : int
+	framerate : int
+	model_handler : ModelHandler
+
+	update()
+	handle_user_events()
+}
+class PlotFrame {
+	widht
+	height
+
+	update()
+	handle_user_events()
+}
+class InteractiveConsoleFrame {
+	width
+	height
+	main_frame
+	plot_frame
+
+	update()
+	handle_user_events()
+	export_user_events()
+}
+
+Frame <|-- InteractiveConsoleFrame
+Frame <|-- MainFrame
+Frame <|-- PlotFrame
+
+InteractiveConsoleFrame *-- MainFrame
+InteractiveConsoleFrame *-- PlotFrame
+
+abstract Entity {
+	id
+	pos : Coord
+	v : Coord
+	a : Coord
+	satiety
+	saturation
+	-move()
+	+activity() : Entity
+	+observe(entities : EntityRef{})
+}
+abstract Pike {
+	id
+	pos : Coord
+	v : Coord
+	a : Coord
+	satiety
+	saturation
+	-move()
+	+activity() : Pike / None
+	+observe(entities : EntityRef{})
+}
+abstract Perch {
+	id
+	pos : Coord
+	v : Coord
+	a : Coord
+	satiety
+	saturation
+	-move()
+	+activity() : Perch / None
+	+observe(entities : EntityRef{})
+}
+class PikeResting {
+	id
+	pos : Coord
+	v : Coord
+	a : Coord
+	satiety
+	saturation
+	-move()
+	+activity() : Pike
+	+observe(entities : EntityRef{})
+}
+class PerchResting {
+	id
+	pos : Coord
+	v : Coord
+	a : Coord
+	satiety
+	saturation
+	-move()
+	+activity() : Perch
+	+observe(entities : EntityRef{})
+}
+class PikeChasing {
+	id
+	pos : Coord
+	v : Coord
+	a : Coord
+	satiety
+	saturation
+	chased_perch
+	-move()
+	+activity() : Pike
+	+observe(entities : EntityRef{})
+}
+class PerchEscaping {
+	id
+	pos : Coord
+	v : Coord
+	a : Coord
+	satiety
+	saturation
+	chasing_pikes[]
+	-move()
+	+activity() : Perch
+	+observe(entities : EntityRef{})
+}
+class PerchChasing {
+	id
+	pos : Coord
+	v : Coord
+	a : Coord
+	satiety
+	saturation
+	chased_food
+	-move()
+	+activity() : Perch
+	+observe(entities : EntityRef{})
+}
+class PikeDead {
+	pos : Coord
+	v : Coord
+	a : Coord
+	saturation
+	-move()
+	+activity() : self / None
+	+observe(entities : EntityRef{})
+}
+class PerchDead {
+	pos : Coord
+	v : Coord
+	a : Coord
+	saturation
+	-move()
+	+activity() : self / None
+	+observe(entities : EntityRef{})
+}
+abstract PerchFood {
+	id
+	pos : Coord
+	v : Coord
+	a : Coord
+	satiety
+	saturation
+	-move()
+	+activity() : PerchFood / None
+	+observe(entities : EntityRef{})
+}
+class PerchFoodResting {
+	id
+	pos : Coord
+	v : Coord
+	a : Coord
+	satiety
+	saturation
+	-move()
+	+activity() : (PerchFood, PopulationEvent)
+	+observe(entities : EntityRef{})
+}
+class PerchFoodDead {
+	pos : Coord
+	v : Coord
+	a : Coord
+	saturation
+	-move()
+	+activity() : (self / None, PopulationEvent)
+	+observe(entities : EntityRef{})
+}
+class EntityRef {
+	id
+	pos : Coord
+	type : str
+}
+class ModelHandler {
+	+entities{id : Entity}
+	-entity_refs{id : EntityRef}
+	+update()
+}
+ModelHandler o-- Entity
+MainFrame *-- ModelHandler
+Entity <|-- Pike
+Entity <|-- Perch
+Pike <|-- PikeResting
+Perch <|-- PerchResting
+Pike <|-- PikeChasing
+Perch <|-- PerchEscaping
+Perch <|-- PerchChasing
+Pike <|-- PikeDead
+Perch <|-- PerchDead
+Entity <|-- PerchFood
+PerchFood <|-- PerchFoodResting
+PerchFood <|-- PerchFoodDead
+
+note as N_activity
+Метод activity() возвращает либо self,
+если состояние объекта не изменяется,
+либо объект одного из подклассов, в
+зависимости от результата деятельности,
+либо None, если объект подлежит уничтожению
+end note
+
+N_activity .. Entity::activity
+@enduml
