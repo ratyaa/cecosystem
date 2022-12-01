@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
-import Frame
 
-class Perch(ABC, Frame):
+class Pike(ABC):
     @abstractmethod
     def __init__(self):
         pass
@@ -17,4 +16,3 @@ class Perch(ABC, Frame):
     @abstractmethod
     def observe(self, entities):
         pass
-        

@@ -1,6 +1,6 @@
 import perch
 
-class PerchResting(Perch):
+class PerchResting(perch):
     def __init__(self, perch):
         self.pos = perch.pos
         self.v = perch.v
