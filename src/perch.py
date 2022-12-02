@@ -1,12 +1,13 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
+import entity
 
-class Perch(ABC):
+class Perch(entity.Entity):
     @abstractmethod
-    def __init__(self):
+    def __init__(self, pos, v, r, sprite):
         pass
 
     @abstractmethod
-    def __move(self):
+    def _move(self):
         pass
 
     @abstractmethod
@@ -14,6 +15,6 @@ class Perch(ABC):
         pass
 
     @abstractmethod
-    def observe(self, entities):
+    def observe(self):
         pass
         
