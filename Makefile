@@ -22,6 +22,8 @@ PYTHON :=			python3
 CREATE_VENV := 			$(PYTHON) -m venv $(ENV)
 ACTIVATE_VENV :=		source $(ENV)/bin/activate
 INSTALL_PACKAGES :=		$(PYTHON) -m pip install -r requirements.txt
+CLEAN :=			rm -rf $(ENV) src/__pycache__
+
 .DEFAULT_GOAL :=		help
 .PHONY: help init --osconfig
 
@@ -34,16 +36,19 @@ ifeq ($(nixos), true)
 	@$(eval ENV :=)
 endif
 ifeq ($(OS), Windows_NT)
-	WHICH := where.exe
-	VENV_ACTIVATION_CMD := $(ENV)\Scripts\activate
+	@$(eval ACTIVATE_VENV := $(ENV)\Scripts\activate)
+	@$(eval CLEAN := if (test-path env, src/pycache) {rm -r -Force env, src/__pycache__})
 endif
 
 help: --osconfig
-ifeq (, @$(WHICH) awk sort)
-	$(error "no awk and sort found")
+ifeq ($(OS), Windows_NT)
+	@type help.txt
 else
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | \
+	awk 'BEGIN {FS = ":.*?## "}; {printf "%-30s %s\n", $$1, $$2 > "help.txt"}'
+	@cat help.txt
 endif
+
 
 init: ## Initialize virtual environment and install packages.
 init: --osconfig
@@ -58,4 +63,4 @@ run: --osconfig
 
 clean: ## Remove created directories.
 clean: --osconfig
-	@rm -rf $(ENV) src/__pycache__
+	@$(CLEAN)
