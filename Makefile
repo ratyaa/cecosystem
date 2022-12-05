@@ -16,16 +16,14 @@
 
 nixos :=			false
 SHELL :=			bash
-ENV :=				env
 WHICH :=			which
-PYTHON :=			python3
-CREATE_VENV := 			$(PYTHON) -m venv $(ENV)
-ACTIVATE_VENV :=		source $(ENV)/bin/activate
+PYTHON :=			python
+CREATE_VENV := 			$(PYTHON) -m venv .env
+ACTIVATE_VENV :=		source .env/bin/activate
 INSTALL_PACKAGES :=		$(PYTHON) -m pip install -r requirements.txt
-CLEAN :=			rm -rf $(ENV) src/__pycache__
 
 .DEFAULT_GOAL :=		help
-.PHONY: help init --osconfig
+.PHONY: help init clean --osconfig
 
 .ONESHELL:
 --osconfig:
@@ -36,13 +34,12 @@ ifeq ($(nixos), true)
 	@$(eval ENV :=)
 endif
 ifeq ($(OS), Windows_NT)
-	@$(eval ACTIVATE_VENV := $(ENV)\Scripts\activate)
-	@$(eval CLEAN := if (test-path env, src/pycache) {rm -r -Force env, src/__pycache__})
+	@$(eval ACTIVATE_VENV := .env\Scripts\activate)
 endif
 
 help: --osconfig
 ifeq ($(OS), Windows_NT)
-	@type help.txt
+	@cat help.txt
 else
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | \
 	awk 'BEGIN {FS = ":.*?## "}; {printf "%-30s %s\n", $$1, $$2 > "help.txt"}'
@@ -63,4 +60,5 @@ run: --osconfig
 
 clean: ## Remove created directories.
 clean: --osconfig
-	@$(CLEAN)
+	@rm -rf .env src/__pycache__
+
