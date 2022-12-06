@@ -1,17 +1,13 @@
 import pygame
 import display_frame
 import model_handler
-
-WIDTH = 800
-HEIGHT = 600
-MODEL_RATE = 500
-FRAME_RATE = 60
+import app_config
 
 frame = display_frame.DisplayFrame(
-    WIDTH,
-    HEIGHT,
-    FRAME_RATE,
-    model_handler.ModelHandler(WIDTH, HEIGHT, MODEL_RATE)
+    app_config.WIDTH,
+    app_config.HEIGHT,
+    app_config.FRAME_RATE,
+    model_handler.ModelHandler(app_config.MODEL_RATE)
 )
 
 frame.update()
