@@ -1,6 +1,7 @@
 import frame
 import pygame
 
+
 class DisplayFrame(frame.Frame):
     def __init__(self, width, height, framerate, model):
         self.width = width
@@ -9,6 +10,7 @@ class DisplayFrame(frame.Frame):
         self.model = model
         pygame.init()
         pygame.display.update()
+
 
     def update(self):
         finished = False
