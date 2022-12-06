@@ -17,4 +17,8 @@ class Perch(entity.Entity):
     @abstractmethod
     def observe(self):
         pass
+
+    @abstractmethod
+    def _check_walls(self):
+        pass
         

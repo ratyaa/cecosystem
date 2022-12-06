@@ -17,3 +17,6 @@ class Entity(ABC):
     def activity(self):
         pass
     
+    @abstractmethod
+    def _check_walls(self):
+        pass    

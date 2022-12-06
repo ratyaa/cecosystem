@@ -3,12 +3,13 @@ import entity
 import perch_resting
 import perch
 import coord
+import app_config
 from random import randint
 
 class ModelHandler:
-    def __init__(self, width, height, model_rate):
-        self.width = width
-        self.height = height
+    def __init__(self, model_rate):
+        self.width = app_config.WIDTH
+        self.height = app_config.HEIGHT
         self.model_rate = model_rate
         self.screen = pygame.display.set_mode((self.width, self.height))
         self.entities = []
@@ -18,8 +19,8 @@ class ModelHandler:
         for i in range(15):
             self.entities.append(perch_resting.PerchResting(
                 coord.Coord(randint(100, self.width - 100), randint(100, self.height - 100)),
-                coord.Coord(float(randint(-2, 2)) / self.model_rate,
-                      float(randint(-2, 2)) / self.model_rate),
+                coord.Coord(float(randint(-50, 50)), # 
+                      float(randint(-50, 50))),
                 randint(10, 15),
                 (255, 0, 0)
             ))
