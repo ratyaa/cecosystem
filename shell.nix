@@ -9,6 +9,7 @@ let
       pypackage.numpy
       pypackage.matplotlib
       pypackage.pygame
+      pypackage.pip
     ];
   };
 in

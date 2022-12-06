@@ -31,7 +31,6 @@ ifeq ($(nixos), true)
 	@$(eval CREATE_VENV :=)
 	@$(eval ACTIVATE_VENV :=)
 	@$(eval INSTALL_PACKAGES :=)
-	@$(eval ENV :=)
 endif
 ifeq ($(OS), Windows_NT)
 	@$(eval ACTIVATE_VENV := .env\Scripts\activate)
