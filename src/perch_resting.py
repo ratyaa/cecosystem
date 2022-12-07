@@ -1,7 +1,6 @@
 import perch
 import coord
 import app_config
-import main
 
 class PerchResting(perch.Perch):
     def __init__(self, pos, v, r, sprite):
@@ -48,7 +47,7 @@ class PerchResting(perch.Perch):
         else:
             self.walls['bottom'] = 0
 
-    def observe(self):
+    def observe(self,other_entities):
         self._check_walls()
     
     

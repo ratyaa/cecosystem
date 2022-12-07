@@ -56,7 +56,7 @@ class ModelHandler:
     def update(self):
         for i in range(len(self.entities)):
             self.entity_replace(i)
-            self.entities[i].observe()
+            self.entities[i].observe(self.entities)
             self.entities[i].activity()
 
     
