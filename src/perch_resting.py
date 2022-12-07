@@ -1,6 +1,7 @@
 import perch
 import coord
 import app_config
+import main
 
 class PerchResting(perch.Perch):
     def __init__(self, pos, v, r, sprite):
@@ -11,6 +12,9 @@ class PerchResting(perch.Perch):
         self.sprite = sprite
         self.walls = {'top': 0, 'bottom': 0, 'left': 0, 'right': 0}
         self.acceleration_factor = 2000.0
+        self.start_condition = ['Perch','Resting']
+        self.new_condition = ['Perch', 'Resting']
+
 
     def _move(self):
         self.a.x += self.walls['left'] * (self.acceleration_factor) / (self.pos.x - self.r) \

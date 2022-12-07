@@ -2,10 +2,10 @@ import pike
 import pike_resting
 import coord
 import app_config
-import model_handler
+import main
 
 class PikeChasing(pike.Pike):
-    def __init__(self, pos, v, r, sprite,):
+    def __init__(self, pos, v, r, sprite):
         self.pos = pos
         self.v = v
         self.r = r
@@ -56,7 +56,11 @@ class PikeChasing(pike.Pike):
             self.walls['bottom'] = 0
 
     def _choosing_victim(self):
-        for entity in model_handler.entities:
+        for entity in main.model.entities:
+            distance = ((self.pos.x - entity.pos.x) ** 2 + (self.pos.y - entity.pos.y) ** 2) ** 0.5
+            if entity.start_condition[0] == 'Perch' and distance <= self.r + entity.r + 20:
+                self.victim = entity
+
 
 
     def _hunt_stop(self):
@@ -64,7 +68,7 @@ class PikeChasing(pike.Pike):
                 self.new_condition = ['Pike', 'Resting']
 
     def _change_condition(self):
-        if self.new_condition[1] == 'Chasing':
+        if self.new_condition[1] == 'Resting':
             return pike_resting.PikeResting(self.pos, self.v,self.r,self.sprite)
 
 
