@@ -18,7 +18,7 @@ class ModelHandler:
         self.__init_entities()
 
     def __init_entities(self):
-        for i in range(15):
+        for i in range(1):
             self.entities.append(perch_resting.PerchResting(
                 coord.Coord(randint(100, self.width - 100), randint(100, self.height - 100)),
                 coord.Coord(float(randint(-50, 50)),
@@ -49,7 +49,7 @@ class ModelHandler:
         pygame.display.update()
 
     def entity_replace(self, number):
-        if self.entities[number].start_condition[0] == 'Pike' and self.entities[number].new_condition != self.entities[number].start_condition:
+        if self.entities[number].new_condition != self.entities[number].start_condition:
             self.entities.append(self.entities[number]._change_condition())
             del self.entities[number]
 

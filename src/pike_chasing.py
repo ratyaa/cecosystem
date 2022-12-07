@@ -15,20 +15,26 @@ class PikeChasing(pike.Pike):
         self.start_condition = ['Pike','Chasing']
         self.new_condition = ['Pike','Chasing']
         self.victim = victim
-        self.distance_x = 0
-        self.distance_y = 0
+        self.distance_x = self.victim.pos.x - self.pos.x
+        self.distance_y = self.victim.pos.y - self.pos.y
 
 
     def _move(self):
         self.a.x += self.walls['left'] * (self.acceleration_factor) / (self.pos.x - self.r) \
-                    + self.walls['right'] * (self.acceleration_factor) / (self.pos.x + self.r - app_config.WIDTH)
+                    + self.walls['right'] * (self.acceleration_factor) / (self.pos.x + self.r - app_config.WIDTH)**5
         self.a.y += self.walls['top'] * (self.acceleration_factor) / (self.pos.y - self.r) \
-                    + self.walls['bottom'] * (self.acceleration_factor) / (self.pos.y + self.r - app_config.HEIGHT)
+                    + self.walls['bottom'] * (self.acceleration_factor) / (self.pos.y + self.r - app_config.HEIGHT)**5
 
-        self.a.x += 0.01*self.acceleration_factor*self.distance_x/(self.distance_x**2 + self.distance_y**2)**0.5
-        self.a.y += 0.01*self.acceleration_factor*self.distance_y/(self.distance_x ** 2 + self.distance_y ** 2) ** 0.5
+        self.a.x += 0.1*self.acceleration_factor*self.distance_x/(self.distance_x**2 + self.distance_y**2)**0.5
+        self.a.y += 0.1*self.acceleration_factor*self.distance_y/(self.distance_x ** 2 + self.distance_y ** 2) ** 0.5
 
         self.v += self.a * app_config.dt
+
+        if self.pos.x - self.r <= 0 or self.pos.x + self.r >= app_config.WIDTH:
+            self.v.x = -self.v.x
+        if self.pos.y - self.r <= 0 or self.pos.x + self.r >= app_config.HEIGHT:
+            self.v.y = -self.v.y
+
         self.pos += self.v * app_config.dt
 
     def activity(self):
@@ -76,3 +82,4 @@ class PikeChasing(pike.Pike):
         self.distance_x = self.victim.pos.x - self.pos.x
         self.distance_y = self.victim.pos.y - self.pos.y
         self._hunt_stop()
+        self._choosing_victim(other_entities)
