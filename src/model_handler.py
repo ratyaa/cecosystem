@@ -7,6 +7,7 @@ import coord
 import app_config
 from random import randint
 
+
 class ModelHandler:
     def __init__(self, model_rate):
         self.width = app_config.WIDTH
