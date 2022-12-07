@@ -49,9 +49,9 @@ class ModelHandler:
         pygame.display.update()
 
     def entity_replace(self, number):
-        if self.entities[number].start_condition[0] == ['Pike'] and self.entities[number].new_condition != self.entities[number].start_condition:
+        if self.entities[number].start_condition[0] == 'Pike' and self.entities[number].new_condition != self.entities[number].start_condition:
             self.entities.append(self.entities[number]._change_condition())
-            self.entities.remove(number)
+            del self.entities[number]
 
     def update(self):
         for i in range(len(self.entities)):

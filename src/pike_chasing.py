@@ -25,8 +25,8 @@ class PikeChasing(pike.Pike):
         self.a.y += self.walls['top'] * (self.acceleration_factor) / (self.pos.y - self.r) \
                     + self.walls['bottom'] * (self.acceleration_factor) / (self.pos.y + self.r - app_config.HEIGHT)
 
-        self.a.x += self.acceleration_factor*self.distance_x/(self.distance_x**2 + self.distance_y**2)**0.5
-        self.a.y += self.acceleration_factor*self.distance_y/(self.distance_x ** 2 + self.distance_y ** 2) ** 0.5
+        self.a.x += 0.01*self.acceleration_factor*self.distance_x/(self.distance_x**2 + self.distance_y**2)**0.5
+        self.a.y += 0.01*self.acceleration_factor*self.distance_y/(self.distance_x ** 2 + self.distance_y ** 2) ** 0.5
 
         self.v += self.a * app_config.dt
         self.pos += self.v * app_config.dt
@@ -71,7 +71,7 @@ class PikeChasing(pike.Pike):
             return pike_resting.PikeResting(self.pos, self.v,self.r,self.sprite)
 
 
-    def observe(self):
+    def observe(self,other_entities):
         self._check_walls()
         self.distance_x = self.victim.pos.x - self.pos.x
         self.distance_y = self.victim.pos.y - self.pos.y
