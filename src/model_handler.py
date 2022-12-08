@@ -18,19 +18,20 @@ class ModelHandler:
         self.__init_entities()
 
     def __init_entities(self):
-        for i in range(1):
+        for i in range(15):
             self.entities.append(perch_resting.PerchResting(
                 coord.Coord(randint(100, self.width - 100), randint(100, self.height - 100)),
                 coord.Coord(float(randint(-50, 50)),
                       float(randint(-50, 50))),
-                randint(10, 15),
+                randint(5, 10),
                 (0, 255, 0)
             ))
+        for i in range(5):
             self.entities.append(pike_resting.PikeResting(
                 coord.Coord(randint(100, self.width - 100), randint(100, self.height - 100)),
                 coord.Coord(float(randint(-50, 50)),  #
                             float(randint(-50, 50))),
-                randint(20, 35),
+                randint(15, 20),
                 (255, 0, 0)
             ))
         

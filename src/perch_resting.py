@@ -18,16 +18,13 @@ class PerchResting(perch.Perch):
 
 
     def _move(self):
-        self.a.x += self.walls['left'] * (self.acceleration_factor) / (self.pos.x - self.r) \
-            + self.walls['right'] * (self.acceleration_factor) / (self.pos.x + self.r - app_config.WIDTH)**5
-        self.a.y += self.walls['top'] * (self.acceleration_factor) / (self.pos.y - self.r) \
-            + self.walls['bottom'] * (self.acceleration_factor) / (self.pos.y + self.r - app_config.HEIGHT)**5
+        self.a.x += 1000*self.walls['left'] * (self.acceleration_factor) / (self.pos.x - self.r) \
+            + self.walls['right'] * (self.acceleration_factor) / (self.pos.x + self.r - app_config.WIDTH)
+        self.a.y += 1000*self.walls['top'] * (self.acceleration_factor) / (self.pos.y - self.r) \
+            + self.walls['bottom'] * (self.acceleration_factor) / (self.pos.y + self.r - app_config.HEIGHT)
 
         self.v += self.a * app_config.dt
-        if self.pos.x - self.r <= 0 or self.pos.x + self.r >= app_config.WIDTH:
-            self.v.x = -self.v.x
-        if self.pos.y - self.r <= 0 or self.pos.x + self.r >= app_config.HEIGHT:
-            self.v.y = -self.v.y
+
         self.pos += self.v * app_config.dt
 
     def activity(self):

@@ -20,20 +20,15 @@ class PikeChasing(pike.Pike):
 
 
     def _move(self):
-        self.a.x += self.walls['left'] * (self.acceleration_factor) / (self.pos.x - self.r) \
-                    + self.walls['right'] * (self.acceleration_factor) / (self.pos.x + self.r - app_config.WIDTH)**5
-        self.a.y += self.walls['top'] * (self.acceleration_factor) / (self.pos.y - self.r) \
-                    + self.walls['bottom'] * (self.acceleration_factor) / (self.pos.y + self.r - app_config.HEIGHT)**5
+        self.a.x += 1000*(self.walls['left'] * (self.acceleration_factor) / (self.pos.x - self.r) \
+                    + self.walls['right'] * (self.acceleration_factor) / (self.pos.x + self.r - app_config.WIDTH))
+        self.a.y += 1000*(self.walls['top'] * (self.acceleration_factor) / (self.pos.y - self.r) \
+                    + self.walls['bottom'] * (self.acceleration_factor) / (self.pos.y + self.r - app_config.HEIGHT))
 
-        self.a.x += 0.1*self.acceleration_factor*self.distance_x/(self.distance_x**2 + self.distance_y**2)**0.5
-        self.a.y += 0.1*self.acceleration_factor*self.distance_y/(self.distance_x ** 2 + self.distance_y ** 2) ** 0.5
+        self.a.x += 0.05*self.acceleration_factor*self.distance_x/(self.distance_x**2 + self.distance_y**2)**0.5
+        self.a.y += 0.05*self.acceleration_factor*self.distance_y/(self.distance_x ** 2 + self.distance_y ** 2) ** 0.5
 
         self.v += self.a * app_config.dt
-
-        if self.pos.x - self.r <= 0 or self.pos.x + self.r >= app_config.WIDTH:
-            self.v.x = -self.v.x
-        if self.pos.y - self.r <= 0 or self.pos.x + self.r >= app_config.HEIGHT:
-            self.v.y = -self.v.y
 
         self.pos += self.v * app_config.dt
 
@@ -63,7 +58,7 @@ class PikeChasing(pike.Pike):
     def _choosing_victim(self,other_entities):
         for entity in other_entities:
             distance = ((self.pos.x - entity.pos.x) ** 2 + (self.pos.y - entity.pos.y) ** 2) ** 0.5
-            if entity.start_condition[0] == 'Perch' and distance <= self.r + entity.r + 20:
+            if entity.start_condition[0] == 'Perch' and distance <= self.r + entity.r + 100:
                 self.victim = entity
 
 
