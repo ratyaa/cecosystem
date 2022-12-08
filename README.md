@@ -18,11 +18,12 @@ make run
 
 #### Windows
 
-`Python` и `GNU Make` можно установить с помощью пакетного менеджера `winget`:
+`GNU Make` можно установить с помощью пакетного менеджера `winget`:
 ```
 winget install GnuWin32.Make
 winget install python
 ```
+или с официального [веб-сайта](https://gnuwin32.sourceforge.net/packages/make.htm)
 Работа с `make` производится в консоли `git-bash`.
 
 #### NixOS
