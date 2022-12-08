@@ -21,7 +21,6 @@ make run
 `GNU Make` можно установить с помощью пакетного менеджера `winget` в `Powershel`:
 ```
 winget install GnuWin32.Make
-winget install python
 ```
 или с официального [веб-сайта](https://gnuwin32.sourceforge.net/packages/make.htm).
 Работа с `make` производится в консоли `git-bash`.
