@@ -11,7 +11,7 @@ class PikeChasing(pike.Pike):
         self.a = coord.Coord(0, 0)
         self.sprite = sprite
         self.walls = {'top': 0, 'bottom': 0, 'left': 0, 'right': 0}
-        self.acceleration_factor = 4000.0
+        self.acceleration_factor = 3000.0
         self.start_condition = ['Pike','Chasing']
         self.new_condition = ['Pike','Chasing']
         self.victim = victim
@@ -20,9 +20,9 @@ class PikeChasing(pike.Pike):
 
 
     def _move(self):
-        self.a.x += 1000*(self.walls['left'] * (self.acceleration_factor) / (self.pos.x - self.r) \
+        self.a.x += 500*(self.walls['left'] * (self.acceleration_factor) / (self.pos.x - self.r) \
                     + self.walls['right'] * (self.acceleration_factor) / (self.pos.x + self.r - app_config.WIDTH))
-        self.a.y += 1000*(self.walls['top'] * (self.acceleration_factor) / (self.pos.y - self.r) \
+        self.a.y += 500*(self.walls['top'] * (self.acceleration_factor) / (self.pos.y - self.r) \
                     + self.walls['bottom'] * (self.acceleration_factor) / (self.pos.y + self.r - app_config.HEIGHT))
 
         self.a.x += 0.05*self.acceleration_factor*self.distance_x/(self.distance_x**2 + self.distance_y**2)**0.5
@@ -57,9 +57,10 @@ class PikeChasing(pike.Pike):
 
     def _choosing_victim(self,other_entities):
         for entity in other_entities:
-            distance = ((self.pos.x - entity.pos.x) ** 2 + (self.pos.y - entity.pos.y) ** 2) ** 0.5
-            if entity.start_condition[0] == 'Perch' and distance <= self.r + entity.r + 100:
-                self.victim = entity
+            if entity.start_condition[0] == 'Perch':
+                distance = ((self.pos.x - entity.pos.x) ** 2 + (self.pos.y - entity.pos.y) ** 2) ** 0.5
+                if distance <= ((self.distance_x)**2 + (self.distance_y)**2)**0.5 * 3:
+                  self.victim = entity
 
 
 

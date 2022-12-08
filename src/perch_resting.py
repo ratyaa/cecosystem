@@ -18,9 +18,9 @@ class PerchResting(perch.Perch):
 
 
     def _move(self):
-        self.a.x += 1000*self.walls['left'] * (self.acceleration_factor) / (self.pos.x - self.r) \
+        self.a.x += 500*self.walls['left'] * (self.acceleration_factor) / (self.pos.x - self.r) \
             + self.walls['right'] * (self.acceleration_factor) / (self.pos.x + self.r - app_config.WIDTH)
-        self.a.y += 1000*self.walls['top'] * (self.acceleration_factor) / (self.pos.y - self.r) \
+        self.a.y += 500*self.walls['top'] * (self.acceleration_factor) / (self.pos.y - self.r) \
             + self.walls['bottom'] * (self.acceleration_factor) / (self.pos.y + self.r - app_config.HEIGHT)
 
         self.v += self.a * app_config.dt
@@ -53,8 +53,8 @@ class PerchResting(perch.Perch):
     def _look_for_hunters(self,other_entities):
         for entity in other_entities:
             distance = ((self.pos.x - entity.pos.x)**2 + (self.pos.y - entity.pos.y)**2)**0.5
-            if entity.start_condition[0] == 'Pike' and distance <= self.r + entity.r + 30:
-                self.new_condition = ['Pike', 'Escaping']
+            if entity.start_condition[0] == 'Pike' and distance <= self.r + entity.r + 100:
+                self.new_condition = ['Perch', 'Escaping']
                 self.new_hunter = entity
 
     def _change_condition(self):

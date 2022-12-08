@@ -17,9 +17,9 @@ class PikeResting(pike.Pike):
         self.new_victim = self
 
     def _move(self):
-        self.a.x += 1000*(self.walls['left'] * (self.acceleration_factor) / (self.pos.x - self.r) \
+        self.a.x += 500*(self.walls['left'] * (self.acceleration_factor) / (self.pos.x - self.r) \
                     + self.walls['right'] * (self.acceleration_factor) / (self.pos.x + self.r - app_config.WIDTH))
-        self.a.y += 1000*(self.walls['top'] * (self.acceleration_factor) / (self.pos.y - self.r) \
+        self.a.y += 500*(self.walls['top'] * (self.acceleration_factor) / (self.pos.y - self.r) \
                     + self.walls['bottom'] * (self.acceleration_factor) / (self.pos.y + self.r - app_config.HEIGHT))
 
         self.v += self.a * app_config.dt

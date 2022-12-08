@@ -2,6 +2,7 @@ import pygame
 import entity
 import perch_resting
 import pike_resting
+import perch_died
 import perch
 import coord
 import app_config
@@ -18,7 +19,7 @@ class ModelHandler:
         self.__init_entities()
 
     def __init_entities(self):
-        for i in range(15):
+        for i in range(30):
             self.entities.append(perch_resting.PerchResting(
                 coord.Coord(randint(100, self.width - 100), randint(100, self.height - 100)),
                 coord.Coord(float(randint(-50, 50)),
@@ -26,7 +27,7 @@ class ModelHandler:
                 randint(5, 10),
                 (0, 255, 0)
             ))
-        for i in range(5):
+        for i in range(10):
             self.entities.append(pike_resting.PikeResting(
                 coord.Coord(randint(100, self.width - 100), randint(100, self.height - 100)),
                 coord.Coord(float(randint(-50, 50)),  #
@@ -51,8 +52,7 @@ class ModelHandler:
 
     def entity_replace(self, number):
         if self.entities[number].new_condition != self.entities[number].start_condition:
-            self.entities.append(self.entities[number]._change_condition())
-            del self.entities[number]
+            self.entities[number] = self.entities[number]._change_condition()
 
     def update(self):
         for i in range(len(self.entities)):

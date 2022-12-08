@@ -2,6 +2,7 @@ import perch
 import coord
 import app_config
 import perch_resting
+import perch_died
 
 class PerchEscaping(perch.Perch):
     def __init__(self, pos, v, r, sprite, hunter):
@@ -11,7 +12,7 @@ class PerchEscaping(perch.Perch):
         self.a = coord.Coord(0, 0)
         self.sprite = sprite
         self.walls = {'top': 0, 'bottom': 0, 'left': 0, 'right': 0}
-        self.acceleration_factor = 1000.0
+        self.acceleration_factor = 2000.0
         self.start_condition = ['Perch', 'Resting']
         self.new_condition = ['Perch', 'Resting']
         self.hunter = hunter
@@ -20,9 +21,9 @@ class PerchEscaping(perch.Perch):
 
 
     def _move(self):
-        self.a.x += 1000*(self.walls['left'] * (self.acceleration_factor) / (self.pos.x - self.r) \
+        self.a.x += 500*(self.walls['left'] * (self.acceleration_factor) / (self.pos.x - self.r) \
             + self.walls['right'] * (self.acceleration_factor) / (self.pos.x + self.r - app_config.WIDTH))
-        self.a.y += 1000*(self.walls['top'] * (self.acceleration_factor) / (self.pos.y - self.r) \
+        self.a.y += 500*(self.walls['top'] * (self.acceleration_factor) / (self.pos.y - self.r) \
             + self.walls['bottom'] * (self.acceleration_factor) / (self.pos.y + self.r - app_config.HEIGHT))
 
         self.a.x -= 0.05*self.acceleration_factor*self.distance_x/(self.distance_x**2 + self.distance_y**2)**0.5
@@ -57,15 +58,19 @@ class PerchEscaping(perch.Perch):
 
     def _look_for_hunters(self,other_entities):
         for entity in other_entities:
-            distance = ((self.pos.x - entity.pos.x)**2 + (self.pos.y - entity.pos.y)**2)**0.5
             if entity.start_condition[0] == 'Pike':
-                if distance <= self.r + entity.r + 150:
+                distance = ((self.pos.x - entity.pos.x) ** 2 + (self.pos.y - entity.pos.y) ** 2) ** 0.5
+                if distance >= self.r + entity.r + 150:
                     self.new_condition = ['Perch', 'Resting']
+                elif distance <= (entity.r - self.r)*2:
+                    self.new_condition = ['Perch', 'Died']
 
 
     def _change_condition(self):
         if self.new_condition[1] == 'Resting':
             return perch_resting.PerchResting(self.pos, self.v, self.r, self.sprite)
+        if self.new_condition[1] == 'Died':
+            return perch_died.PerchDied(self.pos, self.v, 0, self.sprite)
 
     def observe(self, other_entities):
         self._check_walls()
