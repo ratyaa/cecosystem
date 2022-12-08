@@ -18,7 +18,7 @@ make run
 
 #### Windows
 
-`GNU Make` можно установить с помощью пакетного менеджера `winget`:
+`GNU Make` можно установить с помощью пакетного менеджера `winget` в `Powershel`:
 ```
 winget install GnuWin32.Make
 winget install python
