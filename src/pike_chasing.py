@@ -58,14 +58,15 @@ class PikeChasing(pike.Pike):
             self.walls['bottom'] = 0
 
     def _choosing_victim(self, other_entities):
-        if self.victim.start_condition[0] == 'Perch':
-            self.distance_x = self.victim.pos.x - self.pos.x
-            self.distance_y = self.victim.pos.y - self.pos.y
-            self.distance = (self.distance_x ** 2 + self.distance_y ** 2) ** 0.5
+        self.distance_x = self.victim.pos.x - self.pos.x
+        self.distance_y = self.victim.pos.y - self.pos.y
+        self.distance = (self.distance_x ** 2 + self.distance_y ** 2) ** 0.5
         if self.distance >= 100:
             self.new_condition = ['Pike', 'Resting']
         elif self.distance <= (self.r - self.victim.r):
             self.saturation += 100
+            self.new_condition = ['Pike', 'Resting']
+        if self.victim.new_condition == ['Perch', 'Died']:
             self.new_condition = ['Pike', 'Resting']
         for entity in other_entities:
             if entity.start_condition[0] == 'Perch':

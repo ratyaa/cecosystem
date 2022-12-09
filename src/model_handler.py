@@ -19,7 +19,7 @@ class ModelHandler:
         self.__init_entities()
 
     def __init_entities(self):
-        for i in range(15):
+        for i in range(30):
             self.entities.append(perch_resting.PerchResting(
                 coord.Coord(randint(100, self.width - 100), randint(100, self.height - 100)),
                 coord.Coord(float(randint(-50, 50)),
@@ -27,7 +27,7 @@ class ModelHandler:
                 randint(5, 10),
                 (0, 255, 0)
             ))
-        for i in range(1):
+        for i in range(10):
             self.entities.append(pike_resting.PikeResting(
                 coord.Coord(randint(100, self.width - 100), randint(100, self.height - 100)),
                 coord.Coord(float(randint(-50, 50)),  #
@@ -55,7 +55,10 @@ class ModelHandler:
             self.entities[number] = self.entities[number]._change_condition()
 
     def update(self):
+        '''Вы можете быть озадачены наличием двух вызовов функции entity.observe...
+        Это необходимо для исключения некоторых досаждающих багов.'''
         for i, entity in enumerate(self.entities):
+            entity.observe(self.entities)
             entity.observe(self.entities)
             self.entity_replace(i)
             entity.activity()
