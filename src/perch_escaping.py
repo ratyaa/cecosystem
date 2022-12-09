@@ -13,8 +13,8 @@ class PerchEscaping(perch.Perch):
         self.sprite = sprite
         self.walls = {'top': 0, 'bottom': 0, 'left': 0, 'right': 0}
         self.acceleration_factor = 2000.0
-        self.start_condition = ['Perch', 'Resting']
-        self.new_condition = ['Perch', 'Resting']
+        self.start_condition = ['Perch', 'Escaping']
+        self.new_condition = ['Perch', 'Escaping']
         self.hunter = hunter
         self.distance_x = self.hunter.pos.x - self.pos.x
         self.distance_y = self.hunter.pos.y - self.pos.y
@@ -61,23 +61,23 @@ class PerchEscaping(perch.Perch):
         self.distance_x = self.hunter.pos.x - self.pos.x
         self.distance_y = self.hunter.pos.y - self.pos.y
         self.distance = (self.distance_x ** 2 + self.distance_y ** 2) ** 0.5
-        if self.distance >= 150:
+        if self.distance >= 200:
             self.new_condition = ['Perch', 'Resting']
         elif self.distance <= (self.hunter.r - self.r):
             self.new_condition = ['Perch', 'Died']
         for entity in other_entities:
             if entity.start_condition[0] == 'Pike':
                 distance = ((self.pos.x - entity.pos.x) ** 2 + (self.pos.y - entity.pos.y) ** 2) ** 0.5
-                if distance <= self.distance*2:
+                if distance <= self.distance/2:
                     self.hunter = entity
                     self.distance = distance
 
 
     def _change_condition(self):
         if self.new_condition[1] == 'Resting':
-            return perch_resting.PerchResting(self.pos, self.v, self.r, (0,255,0))
+            return perch_resting.PerchResting(self.pos, self.v, self.r, (0, 255, 0))
         if self.new_condition[1] == 'Died':
-            return perch_died.PerchDied(self.pos, self.v, 0, self.sprite)
+            return perch_died.PerchDied(self.pos*1000, self.v, 0, self.sprite)
 
     def observe(self, other_entities):
         self._check_walls()

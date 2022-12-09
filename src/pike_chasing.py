@@ -57,10 +57,11 @@ class PikeChasing(pike.Pike):
         else:
             self.walls['bottom'] = 0
 
-    def _choosing_victim(self,other_entities):
-        self.distance_x = self.victim.pos.x - self.pos.x
-        self.distance_y = self.victim.pos.y - self.pos.y
-        self.distance = (self.distance_x ** 2 + self.distance_y ** 2) ** 0.5
+    def _choosing_victim(self, other_entities):
+        if self.victim.start_condition[0] == 'Perch':
+            self.distance_x = self.victim.pos.x - self.pos.x
+            self.distance_y = self.victim.pos.y - self.pos.y
+            self.distance = (self.distance_x ** 2 + self.distance_y ** 2) ** 0.5
         if self.distance >= 100:
             self.new_condition = ['Pike', 'Resting']
         elif self.distance <= (self.r - self.victim.r):
@@ -68,24 +69,17 @@ class PikeChasing(pike.Pike):
         for entity in other_entities:
             if entity.start_condition[0] == 'Perch':
                 distance = ((self.pos.x - entity.pos.x) ** 2 + (self.pos.y - entity.pos.y) ** 2) ** 0.5
-                if distance <= self.distance * 2:
+                if distance <= self.distance/2:
                     self.victim = entity
                     self.distance = distance
 
-
-
-    def _hunt_stop(self):
-            if ((self.distance_x)**2 + (self.distance_y)**2)**0.5 >= self.r + self.victim.r + 100:
-                self.new_condition = ['Pike', 'Resting']
-
     def _change_condition(self):
         if self.new_condition[1] == 'Resting':
-            return pike_resting.PikeResting(self.pos, self.v,self.r,self.sprite)
+            return pike_resting.PikeResting(self.pos, self.v,self.r,(255,0,0))
 
 
     def observe(self,other_entities):
         self._check_walls()
+        self._choosing_victim(other_entities)
         self.distance_x = self.victim.pos.x - self.pos.x
         self.distance_y = self.victim.pos.y - self.pos.y
-        self._hunt_stop()
-        self._choosing_victim(other_entities)

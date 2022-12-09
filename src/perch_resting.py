@@ -18,10 +18,10 @@ class PerchResting(perch.Perch):
 
 
     def _move(self):
-        self.a.x += 500*self.walls['left'] * (self.acceleration_factor) / (self.pos.x - self.r) \
-            + self.walls['right'] * (self.acceleration_factor) / (self.pos.x + self.r - app_config.WIDTH)
-        self.a.y += 500*self.walls['top'] * (self.acceleration_factor) / (self.pos.y - self.r) \
-            + self.walls['bottom'] * (self.acceleration_factor) / (self.pos.y + self.r - app_config.HEIGHT)
+        self.a.x += 500*(self.walls['left'] * (self.acceleration_factor) / (self.pos.x - self.r) \
+            + self.walls['right'] * (self.acceleration_factor) / (self.pos.x + self.r - app_config.WIDTH))
+        self.a.y += 500*(self.walls['top'] * (self.acceleration_factor) / (self.pos.y - self.r) \
+            + self.walls['bottom'] * (self.acceleration_factor) / (self.pos.y + self.r - app_config.HEIGHT))
 
         self.v += self.a * app_config.dt
 
@@ -50,7 +50,7 @@ class PerchResting(perch.Perch):
         else:
             self.walls['bottom'] = 0
 
-    def _look_for_hunters(self,other_entities):
+    def _look_for_hunters(self, other_entities):
         nearest_hunter_dist = 115
         for entity in other_entities:
             if entity.start_condition[0] == 'Pike':

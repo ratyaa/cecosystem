@@ -62,7 +62,7 @@ class PikeResting(pike.Pike):
 
     def _change_condition(self):
         if self.new_condition[1] == 'Chasing':
-            return pike_chasing.PikeChasing(self.pos, self.v, self.r, self.sprite, self.new_victim)
+            return pike_chasing.PikeChasing(self.pos, self.v, self.r, (30,30,30), self.new_victim)
 
 
     def observe(self,other_entities):
