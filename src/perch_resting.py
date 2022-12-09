@@ -51,15 +51,18 @@ class PerchResting(perch.Perch):
             self.walls['bottom'] = 0
 
     def _look_for_hunters(self,other_entities):
+        nearest_hunter_dist = 115
         for entity in other_entities:
-            distance = ((self.pos.x - entity.pos.x)**2 + (self.pos.y - entity.pos.y)**2)**0.5
-            if entity.start_condition[0] == 'Pike' and distance <= self.r + entity.r + 100:
-                self.new_condition = ['Perch', 'Escaping']
-                self.new_hunter = entity
+            if entity.start_condition[0] == 'Pike':
+                distance = ((self.pos.x - entity.pos.x) ** 2 + (self.pos.y - entity.pos.y) ** 2) ** 0.5
+                if distance < nearest_hunter_dist:
+                    nearest_hunter_dist = distance
+                    self.new_condition = ['Perch', 'Escaping']
+                    self.new_hunter = entity
 
     def _change_condition(self):
         if self.new_condition[1] == 'Escaping':
-            return perch_escaping.PerchEscaping(self.pos, self.v, self.r, self.sprite, self.new_hunter)
+            return perch_escaping.PerchEscaping(self.pos, self.v, self.r, (255,255,255), self.new_hunter)
 
     def observe(self,other_entities):
         self._check_walls()

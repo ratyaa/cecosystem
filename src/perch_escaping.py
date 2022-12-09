@@ -18,6 +18,7 @@ class PerchEscaping(perch.Perch):
         self.hunter = hunter
         self.distance_x = self.hunter.pos.x - self.pos.x
         self.distance_y = self.hunter.pos.y - self.pos.y
+        self.distance = (self.distance_x**2 + self.distance_y**2)**0.5
 
 
     def _move(self):
@@ -26,8 +27,8 @@ class PerchEscaping(perch.Perch):
         self.a.y += 500*(self.walls['top'] * (self.acceleration_factor) / (self.pos.y - self.r) \
             + self.walls['bottom'] * (self.acceleration_factor) / (self.pos.y + self.r - app_config.HEIGHT))
 
-        self.a.x -= 0.05*self.acceleration_factor*self.distance_x/(self.distance_x**2 + self.distance_y**2)**0.5
-        self.a.y -= 0.05*self.acceleration_factor*self.distance_y/(self.distance_x ** 2 + self.distance_y ** 2)**0.5
+        self.a.x -= 0.05*self.acceleration_factor*self.distance_x/self.distance
+        self.a.y -= 0.05*self.acceleration_factor*self.distance_y/self.distance
 
         self.v += self.a * app_config.dt
 
@@ -57,18 +58,24 @@ class PerchEscaping(perch.Perch):
             self.walls['bottom'] = 0
 
     def _look_for_hunters(self,other_entities):
+        self.distance_x = self.hunter.pos.x - self.pos.x
+        self.distance_y = self.hunter.pos.y - self.pos.y
+        self.distance = (self.distance_x ** 2 + self.distance_y ** 2) ** 0.5
+        if self.distance >= self.r + self.hunter.r + 150:
+            self.new_condition = ['Perch', 'Resting']
+        elif self.distance <= (self.hunter.r - self.r):
+            self.new_condition = ['Perch', 'Died']
         for entity in other_entities:
             if entity.start_condition[0] == 'Pike':
                 distance = ((self.pos.x - entity.pos.x) ** 2 + (self.pos.y - entity.pos.y) ** 2) ** 0.5
-                if distance >= self.r + entity.r + 150:
-                    self.new_condition = ['Perch', 'Resting']
-                elif distance <= (entity.r - self.r)*2:
-                    self.new_condition = ['Perch', 'Died']
+                if distance <= self.distance*2:
+                    self.hunter = entity
+                    self.distance = distance
 
 
     def _change_condition(self):
         if self.new_condition[1] == 'Resting':
-            return perch_resting.PerchResting(self.pos, self.v, self.r, self.sprite)
+            return perch_resting.PerchResting(self.pos, self.v, self.r, (0,255,0))
         if self.new_condition[1] == 'Died':
             return perch_died.PerchDied(self.pos, self.v, 0, self.sprite)
 

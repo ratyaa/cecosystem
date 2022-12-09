@@ -17,6 +17,7 @@ class PikeChasing(pike.Pike):
         self.victim = victim
         self.distance_x = self.victim.pos.x - self.pos.x
         self.distance_y = self.victim.pos.y - self.pos.y
+        self.distance = (self.distance_x**2 + self.distance_y**2)**0.5
 
 
     def _move(self):
@@ -25,8 +26,8 @@ class PikeChasing(pike.Pike):
         self.a.y += 500*(self.walls['top'] * (self.acceleration_factor) / (self.pos.y - self.r) \
                     + self.walls['bottom'] * (self.acceleration_factor) / (self.pos.y + self.r - app_config.HEIGHT))
 
-        self.a.x += 0.05*self.acceleration_factor*self.distance_x/(self.distance_x**2 + self.distance_y**2)**0.5
-        self.a.y += 0.05*self.acceleration_factor*self.distance_y/(self.distance_x ** 2 + self.distance_y ** 2) ** 0.5
+        self.a.x += 0.05*self.acceleration_factor*self.distance_x/self.distance
+        self.a.y += 0.05*self.acceleration_factor*self.distance_y/self.distance
 
         self.v += self.a * app_config.dt
 
