@@ -66,6 +66,7 @@ class PikeChasing(pike.Pike):
             self.new_condition = ['Pike', 'Resting']
         elif self.distance <= (self.r - self.victim.r):
             self.saturation += 100
+            self.new_condition = ['Pike', 'Resting']
         for entity in other_entities:
             if entity.start_condition[0] == 'Perch':
                 distance = ((self.pos.x - entity.pos.x) ** 2 + (self.pos.y - entity.pos.y) ** 2) ** 0.5
