@@ -18,6 +18,7 @@ class PikeChasing(pike.Pike):
         self.distance_x = self.victim.pos.x - self.pos.x
         self.distance_y = self.victim.pos.y - self.pos.y
         self.distance = (self.distance_x**2 + self.distance_y**2)**0.5
+        self.saturation = 1000
 
 
     def _move(self):
@@ -57,11 +58,19 @@ class PikeChasing(pike.Pike):
             self.walls['bottom'] = 0
 
     def _choosing_victim(self,other_entities):
+        self.distance_x = self.victim.pos.x - self.pos.x
+        self.distance_y = self.victim.pos.y - self.pos.y
+        self.distance = (self.distance_x ** 2 + self.distance_y ** 2) ** 0.5
+        if self.distance >= 100:
+            self.new_condition = ['Pike', 'Resting']
+        elif self.distance <= (self.r - self.victim.r):
+            self.saturation += 100
         for entity in other_entities:
             if entity.start_condition[0] == 'Perch':
                 distance = ((self.pos.x - entity.pos.x) ** 2 + (self.pos.y - entity.pos.y) ** 2) ** 0.5
-                if distance <= ((self.distance_x)**2 + (self.distance_y)**2)**0.5 * 3:
-                  self.victim = entity
+                if distance <= self.distance * 2:
+                    self.victim = entity
+                    self.distance = distance
 
 
 

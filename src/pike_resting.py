@@ -51,11 +51,14 @@ class PikeResting(pike.Pike):
 
 
     def _search_for_food(self,other_entities):
+        nearest_victim_dist = 90
         for entity in other_entities:
-            distance = ((self.pos.x - entity.pos.x)**2 + (self.pos.y - entity.pos.y)**2)**0.5
-            if entity.start_condition[0] == 'Perch' and distance <= self.r + entity.r + 100:
-                self.new_condition = ['Pike', 'Chasing']
-                self.new_victim = entity
+            if entity.start_condition[0] == 'Perch':
+                distance = ((self.pos.x - entity.pos.x) ** 2 + (self.pos.y - entity.pos.y) ** 2) ** 0.5
+                if distance < nearest_victim_dist:
+                    nearest_victim_dist = distance
+                    self.new_condition = ['Pike', 'Chasing']
+                    self.new_victim = entity
 
     def _change_condition(self):
         if self.new_condition[1] == 'Chasing':

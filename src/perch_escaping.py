@@ -61,7 +61,7 @@ class PerchEscaping(perch.Perch):
         self.distance_x = self.hunter.pos.x - self.pos.x
         self.distance_y = self.hunter.pos.y - self.pos.y
         self.distance = (self.distance_x ** 2 + self.distance_y ** 2) ** 0.5
-        if self.distance >= self.r + self.hunter.r + 150:
+        if self.distance >= 150:
             self.new_condition = ['Perch', 'Resting']
         elif self.distance <= (self.hunter.r - self.r):
             self.new_condition = ['Perch', 'Died']
