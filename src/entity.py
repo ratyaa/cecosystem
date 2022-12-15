@@ -15,6 +15,7 @@ class Entity(ABC):
 
     @abstractmethod
     def activity(self):
+        '''Функция определяет активность сущности, исходя из результатов действия функции observe.'''
         pass
     
     @abstractmethod
@@ -22,4 +23,5 @@ class Entity(ABC):
         pass
 
     def _change_condition(self):
+        '''Функция реализует смену состояний сущности (Entity) при соответствующих условиях.'''
         pass

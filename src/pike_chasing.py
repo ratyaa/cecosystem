@@ -5,14 +5,14 @@ import coord
 import app_config
 
 class PikeChasing(pike.Pike):
-    def __init__(self, pos, v, r, sprite, victim, saturation):
+    def __init__(self, pos, v, r, sprite, victim, saturation, a_factor):
         self.pos = pos
         self.v = v
         self.r = r
         self.a = coord.Coord(0, 0)
         self.sprite = sprite
         self.walls = {'top': 0, 'bottom': 0, 'left': 0, 'right': 0}
-        self.acceleration_factor = 3000.0
+        self.acceleration_factor = a_factor
         self.start_condition = ['Pike','Chasing']
         self.new_condition = ['Pike','Chasing']
         self.victim = victim
@@ -44,8 +44,8 @@ class PikeChasing(pike.Pike):
         self.a.x = 0
         self.a.y = 0
         self._move()
-        self.saturation -= 1
-        self.acceleration_factor += 5
+        self.saturation -= 0.5
+        self.acceleration_factor += 0.5
 
     def _check_walls(self):
         if self.pos.x < app_config.WALL_AWARE:
@@ -72,7 +72,8 @@ class PikeChasing(pike.Pike):
         if self.distance >= 100:
             self.new_condition = ['Pike', 'Resting']
         elif self.distance <= (self.r - self.victim.r):
-            self.saturation += 100
+            self.saturation += 500
+            self.acceleration_factor -= 30
             self.new_condition = ['Pike', 'Resting']
         if self.victim.new_condition == ['Perch', 'Died']:
             self.new_condition = ['Pike', 'Resting']
@@ -85,11 +86,12 @@ class PikeChasing(pike.Pike):
         if self.saturation <= 0:
             self.new_condition = ['Pike', 'Died']
 
+
     def _change_condition(self):
         if self.new_condition[1] == 'Resting':
-            return pike_resting.PikeResting(self.pos, self.v,self.r,(255,0,0))
+            return pike_resting.PikeResting(self.pos, self.v,self.r,(255,0,0),self.saturation, self.acceleration_factor)
         if self.new_condition[1] == 'Died':
-            return pike_died.PikeDied(self.pos, self.v, 0, (100, 0, 0))
+            return pike_died.PikeDied(self.pos, self.v, self.r, (100, 0, 0))
 
 
     def observe(self,other_entities):

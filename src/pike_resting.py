@@ -5,18 +5,19 @@ import coord
 import app_config
 
 class PikeResting(pike.Pike):
-    def __init__(self, pos, v, r, sprite, saturation = 5000):
+    def __init__(self, pos, v, r, sprite, saturation = 5000, a_factor = 4000):
         self.pos = pos
         self.v = v
         self.r = r
         self.a = coord.Coord(0, 0)
         self.sprite = sprite
         self.walls = {'top': 0, 'bottom': 0, 'left': 0, 'right': 0}
-        self.acceleration_factor = 2000.0
-        self.start_condition = ['Pike','Resting']
-        self.new_condition = ['Pike','Resting']
+        self.acceleration_factor = a_factor
+        self.start_condition = ['Pike', 'Resting']
+        self.new_condition = ['Pike', 'Resting']
         self.new_victim = self
         self.saturation = saturation
+        self.division = 0
 
     def _move(self):
         self.a.x += 500*(self.walls['left'] * (self.acceleration_factor) / (self.pos.x - self.r) \
@@ -37,8 +38,8 @@ class PikeResting(pike.Pike):
         self.a.x = 0
         self.a.y = 0
         self._move()
-        self.saturation -= 1
-        self.acceleration_factor += 5
+        self.saturation -= 0.5
+        self.acceleration_factor += 0.5
 
     def _check_walls(self):
         if self.pos.x < app_config.WALL_AWARE:
@@ -71,14 +72,26 @@ class PikeResting(pike.Pike):
         if self.saturation <= 0:
             self.new_condition = ['Pike', 'Died']
 
+    def division_process(self):
+        '''Функция реализует процесс размножения щуки'''
+
+        if self.division >= 5000 and self.saturation >= 4000:
+            self.new_condition = ['Pike', 'Division']
+
 
     def _change_condition(self):
         if self.new_condition[1] == 'Chasing':
-            return pike_chasing.PikeChasing(self.pos, self.v, self.r, (30,30,30), self.new_victim, self.saturation)
-        if self.new_condition[1] == 'Died':
+            return pike_chasing.PikeChasing(self.pos, self.v, self.r, (255,0,0), self.new_victim, self.saturation, self.acceleration_factor)
+        elif self.new_condition[1] == 'Division':
+            return PikeResting(self.pos,
+                               0.5*self.v + 0.5*coord.Coord(self.v.y*self.direction, -self.v.x*self.direction),
+                               self.r, (255, 0, 0),
+                               0.5*self.saturation)
+        elif self.new_condition[1] == 'Died':
             return pike_died.PikeDied(self.pos, self.v, self.r, (100,0,0))
 
 
     def observe(self,other_entities):
         self._check_walls()
+        self.division_process()
         self._search_for_food(other_entities)
