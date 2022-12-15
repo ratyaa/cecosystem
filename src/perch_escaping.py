@@ -30,6 +30,11 @@ class PerchEscaping(perch.Perch):
         self.a.x -= 0.05*self.acceleration_factor*self.distance_x/self.distance
         self.a.y -= 0.05*self.acceleration_factor*self.distance_y/self.distance
 
+        self.a.x += 0.05 * self.acceleration_factor * self.v.x / (self.v.x ** 2 + self.v.y ** 2) ** 0.5
+        self.a.y += 0.05 * self.acceleration_factor * self.v.y / (self.v.x ** 2 + self.v.y ** 2) ** 0.5
+
+        self.a -= self.v
+
         self.v += self.a * app_config.dt
 
         self.pos += self.v * app_config.dt
