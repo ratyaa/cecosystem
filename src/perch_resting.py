@@ -68,10 +68,15 @@ class PerchResting(perch.Perch):
                     self.new_condition = ['Perch', 'Escaping']
                     self.new_hunter = entity
 
-    def division_process(self):
+    def division_process(self, other_entities):
         ''''Функция реализует процесс размножения окуня'''
         if self.division >= 2500:
-            self.new_condition = ['Perch', 'Division']
+            number_of_perches = 0
+            for entity in other_entities:
+                if entity.new_condition[0] == 'Perch':
+                    number_of_perches += 1
+            if number_of_perches <= 50:
+                self.new_condition = ['Perch', 'Division']
 
     def _change_condition(self):
         if self.new_condition[1] == 'Escaping':
@@ -87,7 +92,7 @@ class PerchResting(perch.Perch):
 
     def observe(self, other_entities):
         self._check_walls()
-        self.division_process()
+        self.division_process(other_entities)
         self._look_for_hunters(other_entities)
     
     
