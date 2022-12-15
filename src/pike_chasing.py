@@ -45,7 +45,8 @@ class PikeChasing(pike.Pike):
         self.a.y = 0
         self._move()
         self.saturation -= 0.5
-        self.acceleration_factor += 0.5
+        if self.acceleration_factor <= 5000:
+            self.acceleration_factor += 0.5
 
     def _check_walls(self):
         if self.pos.x < app_config.WALL_AWARE:

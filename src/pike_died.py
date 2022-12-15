@@ -15,9 +15,9 @@ class PikeDied(pike.Pike):
     def _move(self):
         self.a -= self.v
         self.v += self.a* app_config.dt
-        if (self.pos.x <= 0) or (self.pos.x + self.r >= app_config.WIDTH):
+        if (self.pos.x - app_config.WALL_AWARE <= 0) or (self.pos.x + self.r + app_config.WALL_AWARE >= app_config.WIDTH):
             self.v.x = -self.v.x
-        if (self.pos.y <= 0) or (self.pos.y + self.r >= app_config.HEIGHT):
+        if (self.pos.y - app_config.WALL_AWARE <= 0) or (self.pos.y + self.r + app_config.WALL_AWARE >= app_config.HEIGHT):
             self.v.y = -self.v.y
         self.pos += self.v * app_config.dt
 

@@ -75,7 +75,7 @@ class PerchResting(perch.Perch):
 
     def _change_condition(self):
         if self.new_condition[1] == 'Escaping':
-            return perch_escaping.PerchEscaping(self.pos, self.v, self.r, (0,255,0), self.new_hunter)
+            return perch_escaping.PerchEscaping(self.pos, self.v, self.r, (0, 255, 0), self.new_hunter)
         if self.new_condition[1] == 'Division':
             if self.direction == -1:
                 self.direction = 1

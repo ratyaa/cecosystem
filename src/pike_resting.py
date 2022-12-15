@@ -18,6 +18,7 @@ class PikeResting(pike.Pike):
         self.new_victim = self
         self.saturation = saturation
         self.division = 0
+        self.direction = 1
 
     def _move(self):
         self.a.x += 500*(self.walls['left'] * (self.acceleration_factor) / (self.pos.x - self.r) \
@@ -35,11 +36,15 @@ class PikeResting(pike.Pike):
         self.pos += self.v * app_config.dt
 
     def activity(self):
+        ''' В activity щуки входит рост аппетита (saturation падает),
+         соответствующий рост ускорения в поисках пищи (acceleration_factor)'''
         self.a.x = 0
         self.a.y = 0
         self._move()
         self.saturation -= 0.5
-        self.acceleration_factor += 0.5
+        if self.acceleration_factor <= 5000:
+            self.acceleration_factor += 0.5
+        self.division += 1
 
     def _check_walls(self):
         if self.pos.x < app_config.WALL_AWARE:
@@ -73,7 +78,7 @@ class PikeResting(pike.Pike):
             self.new_condition = ['Pike', 'Died']
 
     def division_process(self):
-        '''Функция реализует процесс размножения щуки'''
+        '''Функция реализует процесс размножения щуки.'''
 
         if self.division >= 5000 and self.saturation >= 4000:
             self.new_condition = ['Pike', 'Division']
