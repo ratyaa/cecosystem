@@ -4,7 +4,7 @@ import asyncio
 import config
 import model
 import ui
-import event_handler
+import uevent.event_handler as event_handler
 
 class App:
     def __init__(self, config_file="config.yaml"):
@@ -16,18 +16,13 @@ class App:
         pygame.display.init()
         self.screen = pygame.display.set_mode((self.config.width, self.config.height))
 
-        # self.events = None
-        # self.model = None
-        # self.user_input_handler = None
-        # self.event_handler = None
-        # self.task_group = None
-        
     async def run(self):
         self.events = asyncio.Queue()
+        await self.events.put('help')
         
         self.model = model.Model(self)
-        self.user_input_handler = ui.UserInputHandler(self)
         self.event_handler = event_handler.EventHandler(self)
+        self.user_input_handler = ui.UserInputHandler(self)
 
         tasks = (
             self.model.run(),

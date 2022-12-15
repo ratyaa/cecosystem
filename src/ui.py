@@ -6,6 +6,7 @@ class UserInputHandler:
         self.app = app
 
     async def run(self):
+        await asyncio.sleep(0.5)
         while not self.app.finished:
             await self.app.events.put(await self.__ainput())
             await asyncio.sleep(0.1)
@@ -20,5 +21,3 @@ class UserInputHandler:
 
         threading.Thread(target=_run, daemon=True).start()
         return await handle_user_input
-
-        
