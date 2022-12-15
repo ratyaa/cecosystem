@@ -1,10 +1,11 @@
 import pike
 import pike_chasing
+import pike_died
 import coord
 import app_config
 
 class PikeResting(pike.Pike):
-    def __init__(self, pos, v, r, sprite):
+    def __init__(self, pos, v, r, sprite, saturation = 5000):
         self.pos = pos
         self.v = v
         self.r = r
@@ -15,6 +16,7 @@ class PikeResting(pike.Pike):
         self.start_condition = ['Pike','Resting']
         self.new_condition = ['Pike','Resting']
         self.new_victim = self
+        self.saturation = saturation
 
     def _move(self):
         self.a.x += 500*(self.walls['left'] * (self.acceleration_factor) / (self.pos.x - self.r) \
@@ -35,6 +37,8 @@ class PikeResting(pike.Pike):
         self.a.x = 0
         self.a.y = 0
         self._move()
+        self.saturation -= 1
+        self.acceleration_factor += 5
 
     def _check_walls(self):
         if self.pos.x < app_config.WALL_AWARE:
@@ -64,10 +68,15 @@ class PikeResting(pike.Pike):
                     nearest_victim_dist = distance
                     self.new_condition = ['Pike', 'Chasing']
                     self.new_victim = entity
+        if self.saturation <= 0:
+            self.new_condition = ['Pike', 'Died']
+
 
     def _change_condition(self):
         if self.new_condition[1] == 'Chasing':
-            return pike_chasing.PikeChasing(self.pos, self.v, self.r, (30,30,30), self.new_victim)
+            return pike_chasing.PikeChasing(self.pos, self.v, self.r, (30,30,30), self.new_victim, self.saturation)
+        if self.new_condition[1] == 'Died':
+            return pike_died.PikeDied(self.pos, self.v, self.r, (100,0,0))
 
 
     def observe(self,other_entities):
