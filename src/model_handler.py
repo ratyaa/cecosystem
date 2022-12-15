@@ -1,9 +1,12 @@
 import pygame
 import entity
 import perch_resting
+import pike_resting
+import perch_died
 import perch
 import coord
 from random import randint
+
 
 class ModelHandler:
     def __init__(self, app):
@@ -12,17 +15,27 @@ class ModelHandler:
         self.__init_entities()
 
     def __init_entities(self):
-        for i in range(15):
+        for i in range(45):
             self.entities.append(perch_resting.PerchResting(
+
                 coord.Coord(
                     randint(100, self.app.config.width - 100),
                     randint(100, self.app.config.height - 100)
                 ),
-                coord.Coord(float(randint(-50, 50)), # 
+                coord.Coord(float(randint(-50, 50)),
                       float(randint(-50, 50))),
-                randint(10, 15),
-                (255, 0, 0),
+                randint(5, 10),
+                (0, 255, 0),
                 self.app
+            ))
+        for i in range(8):
+            self.entities.append(pike_resting.PikeResting(
+                coord.Coord(randint(100, self.width - 100), randint(100, self.height - 100)),
+                coord.Coord(float(randint(-50, 50)),  #
+                            float(randint(-50, 50))),
+                randint(15, 20),
+                (255, 0, 0)
+
             ))
         
     def draw(self):
@@ -36,9 +49,19 @@ class ModelHandler:
             )
         pygame.display.update()
 
+    def entity_replace(self, number):
+        if self.entities[number].new_condition[1] == 'Division':
+            self.entities.append(self.entities[number]._change_condition())
+        if self.entities[number].new_condition != self.entities[number].start_condition:
+            self.entities[number] = self.entities[number]._change_condition()
+
     def update(self):
-        for entity in self.entities:
-            entity.observe()
+        '''Вы можете быть озадачены наличием двух вызовов функции entity.observe...
+        Это необходимо для исключения некоторых досаждающих багов.'''
+        for i, entity in enumerate(self.entities):
+            entity.observe(self.entities)
+            entity.observe(self.entities)
+            self.entity_replace(i)
             entity.activity()
 
     
