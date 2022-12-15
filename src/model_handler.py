@@ -19,7 +19,7 @@ class ModelHandler:
         self.__init_entities()
 
     def __init_entities(self):
-        for i in range(30):
+        for i in range(40):
             self.entities.append(perch_resting.PerchResting(
                 coord.Coord(randint(100, self.width - 100), randint(100, self.height - 100)),
                 coord.Coord(float(randint(-50, 50)),
@@ -27,7 +27,7 @@ class ModelHandler:
                 randint(5, 10),
                 (0, 255, 0)
             ))
-        for i in range(10):
+        for i in range(8):
             self.entities.append(pike_resting.PikeResting(
                 coord.Coord(randint(100, self.width - 100), randint(100, self.height - 100)),
                 coord.Coord(float(randint(-50, 50)),  #
@@ -51,6 +51,8 @@ class ModelHandler:
         pygame.display.update()
 
     def entity_replace(self, number):
+        if self.entities[number].new_condition[1] == 'Division':
+            self.entities.append(self.entities[number]._change_condition())
         if self.entities[number].new_condition != self.entities[number].start_condition:
             self.entities[number] = self.entities[number]._change_condition()
 

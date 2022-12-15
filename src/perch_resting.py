@@ -15,6 +15,8 @@ class PerchResting(perch.Perch):
         self.start_condition = ['Perch', 'Resting']
         self.new_condition = ['Perch', 'Resting']
         self.new_hunter = self
+        self.division = 0
+        self.direction = 1
 
 
     def _move(self):
@@ -36,6 +38,7 @@ class PerchResting(perch.Perch):
         self.a.x = 0
         self.a.y = 0
         self._move()
+        self.division += 1
 
     def _check_walls(self):
         if self.pos.x < app_config.WALL_AWARE:
@@ -65,12 +68,25 @@ class PerchResting(perch.Perch):
                     self.new_condition = ['Perch', 'Escaping']
                     self.new_hunter = entity
 
+    def division_process(self):
+        if self.division >= 2500:
+            self.new_condition = ['Perch', 'Division']
+
     def _change_condition(self):
         if self.new_condition[1] == 'Escaping':
             return perch_escaping.PerchEscaping(self.pos, self.v, self.r, (255,255,255), self.new_hunter)
+        if self.new_condition[1] == 'Division':
+            if self.direction == -1:
+                self.direction = 1
+            else:
+                self.direction = -1
+            return PerchResting(self.pos,
+                                0.5*self.v + 0.5*coord.Coord(self.v.y*self.direction, -self.v.x*self.direction),
+                                self.r, (0, 255, 0))
 
-    def observe(self,other_entities):
+    def observe(self, other_entities):
         self._check_walls()
+        self.division_process()
         self._look_for_hunters(other_entities)
     
     

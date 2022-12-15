@@ -1,6 +1,6 @@
-import perch
+import pike
 
-class PerchDied(perch.Perch):
+class PerchDied(pike.Pike):
     def __init__(self, pos, v, r, sprite):
         self.pos = pos
         self.v = v
