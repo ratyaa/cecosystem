@@ -10,6 +10,7 @@ let
       pypackage.matplotlib
       pypackage.pygame
       pypackage.pip
+      pypackage.pyyaml
     ];
   };
 in

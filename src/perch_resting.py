@@ -1,9 +1,9 @@
 import perch
 import coord
-import app_config
 
 class PerchResting(perch.Perch):
-    def __init__(self, pos, v, r, sprite):
+    def __init__(self, pos, v, r, sprite, app):
+        self.app = app
         self.pos = pos
         self.v = v
         self.r = r
@@ -14,12 +14,12 @@ class PerchResting(perch.Perch):
 
     def _move(self):
         self.a.x += self.walls['left'] * (self.acceleration_factor) / (self.pos.x - self.r) \
-            + self.walls['right'] * (self.acceleration_factor) / (self.pos.x + self.r - app_config.WIDTH)
+            + self.walls['right'] * (self.acceleration_factor) / (self.pos.x + self.r - self.app.config.width)
         self.a.y += self.walls['top'] * (self.acceleration_factor) / (self.pos.y - self.r) \
-            + self.walls['bottom'] * (self.acceleration_factor) / (self.pos.y + self.r - app_config.HEIGHT)
+            + self.walls['bottom'] * (self.acceleration_factor) / (self.pos.y + self.r - self.app.config.height)
 
-        self.v += self.a * app_config.dt
-        self.pos += self.v * app_config.dt
+        self.v += self.a * self.app.config.dt
+        self.pos += self.v * self.app.config.dt
 
     def activity(self):
         self.a.x = 0
@@ -27,19 +27,19 @@ class PerchResting(perch.Perch):
         self._move()
 
     def _check_walls(self):
-        if self.pos.x < app_config.WALL_AWARE:
+        if self.pos.x < self.app.config.wall_aware:
             self.walls['left'] = 1
         else:
             self.walls['left'] = 0
-        if self.pos.x > app_config.WIDTH - app_config.WALL_AWARE:
+        if self.pos.x > self.app.config.width - self.app.config.wall_aware:
             self.walls['right'] = 1
         else:
             self.walls['right'] = 0
-        if self.pos.y < app_config.WALL_AWARE:
+        if self.pos.y < self.app.config.wall_aware:
             self.walls['top'] = 1
         else:
             self.walls['top'] = 0
-        if self.pos.y > app_config.HEIGHT - app_config.WALL_AWARE:
+        if self.pos.y > self.app.config.height - self.app.config.wall_aware:
             self.walls['bottom'] = 1
         else:
             self.walls['bottom'] = 0

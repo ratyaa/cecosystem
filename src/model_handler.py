@@ -3,36 +3,33 @@ import entity
 import perch_resting
 import perch
 import coord
-import app_config
 from random import randint
 
 class ModelHandler:
-    def __init__(self, model_rate):
-        self.width = app_config.WIDTH
-        self.height = app_config.HEIGHT
-        self.model_rate = model_rate
-        self.screen = pygame.display.set_mode((self.width, self.height))
+    def __init__(self, app):
+        self.app = app
         self.entities = []
         self.__init_entities()
 
     def __init_entities(self):
         for i in range(15):
             self.entities.append(perch_resting.PerchResting(
-                coord.Coord(randint(100, self.width - 100), randint(100, self.height - 100)),
+                coord.Coord(
+                    randint(100, self.app.config.width - 100),
+                    randint(100, self.app.config.height - 100)
+                ),
                 coord.Coord(float(randint(-50, 50)), # 
                       float(randint(-50, 50))),
                 randint(10, 15),
-                (255, 0, 0)
+                (255, 0, 0),
+                self.app
             ))
         
-    def get_update_rate(self):
-        return self.model_rate
-
     def draw(self):
-        self.screen.fill((0, 0, 255))
+        self.app.screen.fill((0, 0, 255))
         for entity in self.entities:
             pygame.draw.circle(
-                self.screen,
+                self.app.screen,
                 entity.sprite,
                 (entity.pos.x, entity.pos.y),
                 entity.r
