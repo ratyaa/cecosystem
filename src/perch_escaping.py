@@ -1,11 +1,12 @@
 import perch
 import coord
-import app_config
 import perch_resting
 import perch_died
 
 class PerchEscaping(perch.Perch):
-    def __init__(self, pos, v, r, sprite, hunter):
+    def __init__(self, app, pos, v, r, sprite, hunter):
+        self.app = app
+        
         self.pos = pos
         self.v = v
         self.r = r
@@ -19,13 +20,15 @@ class PerchEscaping(perch.Perch):
         self.distance_x = self.hunter.pos.x - self.pos.x
         self.distance_y = self.hunter.pos.y - self.pos.y
         self.distance = (self.distance_x**2 + self.distance_y**2)**0.5
-
+        
+    def __config_get(self, variable):
+        return self.app.config.app_vars.get(variable).get_value()
 
     def _move(self):
         self.a.x += 500*(self.walls['left'] * (self.acceleration_factor) / (self.pos.x - self.r) \
-            + self.walls['right'] * (self.acceleration_factor) / (self.pos.x + self.r - app_config.WIDTH))
+            + self.walls['right'] * (self.acceleration_factor) / (self.pos.x + self.r - self.__config_get('width')))
         self.a.y += 500*(self.walls['top'] * (self.acceleration_factor) / (self.pos.y - self.r) \
-            + self.walls['bottom'] * (self.acceleration_factor) / (self.pos.y + self.r - app_config.HEIGHT))
+            + self.walls['bottom'] * (self.acceleration_factor) / (self.pos.y + self.r - self.__config_get('height')))
 
         self.a.x -= 0.05*self.acceleration_factor*self.distance_x/self.distance
         self.a.y -= 0.05*self.acceleration_factor*self.distance_y/self.distance
@@ -35,9 +38,9 @@ class PerchEscaping(perch.Perch):
 
         self.a -= self.v
 
-        self.v += self.a * app_config.dt
+        self.v += self.a * self.__config_get('dt')
 
-        self.pos += self.v * app_config.dt
+        self.pos += self.v * self.__config_get('dt')
 
     def activity(self):
         self.a.x = 0
@@ -45,25 +48,25 @@ class PerchEscaping(perch.Perch):
         self._move()
 
     def _check_walls(self):
-        if self.pos.x < app_config.WALL_AWARE:
+        if self.pos.x < self.__config_get('wall_aware'):
             self.walls['left'] = 1
         else:
             self.walls['left'] = 0
-        if self.pos.x > app_config.WIDTH - app_config.WALL_AWARE:
+        if self.pos.x > self.__config_get('width') - self.__config_get('wall_aware'):
             self.walls['right'] = 1
         else:
             self.walls['right'] = 0
-        if self.pos.y < app_config.WALL_AWARE:
+        if self.pos.y < self.__config_get('wall_aware'):
             self.walls['top'] = 1
         else:
             self.walls['top'] = 0
-        if self.pos.y > app_config.HEIGHT - app_config.WALL_AWARE:
+        if self.pos.y > self.__config_get('height') - self.__config_get('wall_aware'):
             self.walls['bottom'] = 1
         else:
             self.walls['bottom'] = 0
 
     def _look_for_hunters(self,other_entities):
-        self.distance_x = self.hunter.pos.x - self.pos.x
+        self.distance_x = self.hunter.pos.x - self.pos.x;
         self.distance_y = self.hunter.pos.y - self.pos.y
         self.distance = (self.distance_x ** 2 + self.distance_y ** 2) ** 0.5
         if self.distance >= 200:
@@ -80,9 +83,9 @@ class PerchEscaping(perch.Perch):
 
     def _change_condition(self):
         if self.new_condition[1] == 'Resting':
-            return perch_resting.PerchResting(self.pos, self.v, self.r, (0, 255, 0))
+            return perch_resting.PerchResting(self.app, self.pos, self.v, self.r, (0, 255, 0))
         if self.new_condition[1] == 'Died':
-            return perch_died.PerchDied(self.pos*1000, self.v, 0, self.sprite)
+            return perch_died.PerchDied(self.app, self.pos*1000, self.v, 0, self.sprite)
 
     def observe(self, other_entities):
         self._check_walls()

@@ -1,19 +1,24 @@
 import yaml
 import numbers
 
-class AppConfig:
-    def __init__(self, config_file):
-        self.data = yaml.safe_load(open(config_file))
-        self.width = self.__get_value('width', 800)
-        self.height = self.__get_value('height', 600)
-        self.framerate = self.__get_value('framerate', 144)
-        self.update_rate = self.__get_value('update_rate', 500)
-        self.wall_aware = self.__get_value('wall_aware', 50)
-        self.dt_factor = self.__get_value('dt_factor', 50)
-        self.dt = self.dt_factor / self.update_rate
+import app_var
 
-    def __get_value(self, key, default):
-        value = self.data.get(key, default)
-        if not isinstance(value, numbers.Number):
-            value = default
-        return value
+class AppConfig:
+    def __init__(self, config_file_path, defaults_file_path):
+        self.defaults_raw = self.__read_config(defaults_file_path)
+        self.app_vars_raw = self.__read_config(config_file_path)
+
+        self.app_vars = {}
+        self.__init_vars()
+
+    def __read_config(self, config_file_path):
+        return yaml.safe_load(open(config_file_path))
+
+    def __init_vars(self):
+        for key, value in self.app_vars_raw.items():
+            self.app_vars[key] = app_var.AppVariable(
+                key,
+                value,
+                self.defaults_raw.get(key),
+                self.defaults_raw.get(key).get('in_numeric', True),
+            )

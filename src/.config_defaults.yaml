@@ -25,5 +25,5 @@ wall_aware:
   
 dt:
   value: 0.01
-  max_value: 1.0
+  max_value: 1
   min_value: 0.0005

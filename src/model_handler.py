@@ -11,31 +11,41 @@ from random import randint
 class ModelHandler:
     def __init__(self, app):
         self.app = app
+        
         self.entities = []
         self.__init_entities()
+
+    def __config_get(self, variable):
+        return self.app.config.app_vars.get(variable).get_value()
 
     def __init_entities(self):
         for i in range(45):
             self.entities.append(perch_resting.PerchResting(
-
+                self.app,
                 coord.Coord(
-                    randint(100, self.app.config.width - 100),
-                    randint(100, self.app.config.height - 100)
+                    randint(100, self.__config_get('width') - 100),
+                    randint(100, self.__config_get('height') - 100),
                 ),
-                coord.Coord(float(randint(-50, 50)),
-                      float(randint(-50, 50))),
+                coord.Coord(
+                    float(randint(-50, 50)),
+                    float(randint(-50, 50)),
+                ),
                 randint(5, 10),
                 (0, 255, 0),
-                self.app
             ))
         for i in range(8):
             self.entities.append(pike_resting.PikeResting(
-                coord.Coord(randint(100, self.width - 100), randint(100, self.height - 100)),
-                coord.Coord(float(randint(-50, 50)),  #
-                            float(randint(-50, 50))),
+                self.app,
+                coord.Coord(
+                    randint(100, self.__config_get('width') - 100),
+                    randint(100, self.__config_get('height') - 100)
+                ),
+                coord.Coord(
+                    float(randint(-50, 50)),
+                    float(randint(-50, 50))
+                ),
                 randint(15, 20),
                 (255, 0, 0)
-
             ))
         
     def draw(self):

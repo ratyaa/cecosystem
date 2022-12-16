@@ -7,14 +7,22 @@ import ui
 import uevent.event_handler as event_handler
 
 class App:
-    def __init__(self, config_file="config.yaml"):
-        self.config = config.AppConfig(config_file)
+    def __init__(self, config_file="config.yaml", defaults_file='src/.config_defaults.yaml'):
+        self.config = config.AppConfig(config_file, defaults_file)
+        
         self.finished = False
         self.hidden = False
+        self.paused = False
 
         pygame.init()
         pygame.display.init()
-        self.screen = pygame.display.set_mode((self.config.width, self.config.height))
+        self.screen = pygame.display.set_mode((
+            self.__config_get('width'),
+            self.__config_get('height'),
+        ))
+
+    def __config_get(self, variable):
+        return self.config.app_vars.get(variable).get_value()
 
     async def run(self):
         self.events = asyncio.Queue()

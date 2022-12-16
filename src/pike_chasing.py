@@ -2,10 +2,11 @@ import pike
 import pike_resting
 import pike_died
 import coord
-import app_config
 
 class PikeChasing(pike.Pike):
-    def __init__(self, pos, v, r, sprite, victim, saturation, a_factor):
+    def __init__(self, app, pos, v, r, sprite, victim, saturation, a_factor):
+        self.app = app
+        
         self.pos = pos
         self.v = v
         self.r = r
@@ -20,13 +21,16 @@ class PikeChasing(pike.Pike):
         self.distance_y = self.victim.pos.y - self.pos.y
         self.distance = (self.distance_x**2 + self.distance_y**2)**0.5
         self.saturation = saturation
+        
+    def __config_get(self, variable):
+        return self.app.config.app_vars.get(variable).get_value()
 
 
     def _move(self):
         self.a.x += 500*(self.walls['left'] * (self.acceleration_factor) / (self.pos.x - self.r) \
-                    + self.walls['right'] * (self.acceleration_factor) / (self.pos.x + self.r - app_config.WIDTH))
+                    + self.walls['right'] * (self.acceleration_factor) / (self.pos.x + self.r - self.__config_get('width')))
         self.a.y += 500*(self.walls['top'] * (self.acceleration_factor) / (self.pos.y - self.r) \
-                    + self.walls['bottom'] * (self.acceleration_factor) / (self.pos.y + self.r - app_config.HEIGHT))
+                    + self.walls['bottom'] * (self.acceleration_factor) / (self.pos.y + self.r - self.__config_get('height')))
 
         self.a.x += 0.05*self.acceleration_factor*self.distance_x/self.distance
         self.a.y += 0.05*self.acceleration_factor*self.distance_y/self.distance
@@ -36,9 +40,8 @@ class PikeChasing(pike.Pike):
 
         self.a -= self.v
 
-        self.v += self.a * app_config.dt
-
-        self.pos += self.v * app_config.dt
+        self.v += self.a * self.__config_get('dt')
+        self.pos += self.v * self.__config_get('dt')
 
     def activity(self):
         self.a.x = 0
@@ -49,19 +52,19 @@ class PikeChasing(pike.Pike):
             self.acceleration_factor += 0.5
 
     def _check_walls(self):
-        if self.pos.x < app_config.WALL_AWARE:
+        if self.pos.x < self.__config_get('wall_aware'):
             self.walls['left'] = 1
         else:
             self.walls['left'] = 0
-        if self.pos.x > app_config.WIDTH - app_config.WALL_AWARE:
+        if self.pos.x > self.__config_get('width') - self.__config_get('wall_aware'):
             self.walls['right'] = 1
         else:
             self.walls['right'] = 0
-        if self.pos.y < app_config.WALL_AWARE:
+        if self.pos.y < self.__config_get('wall_aware'):
             self.walls['top'] = 1
         else:
             self.walls['top'] = 0
-        if self.pos.y > app_config.HEIGHT - app_config.WALL_AWARE:
+        if self.pos.y > self.__config_get('height') - self.__config_get('wall_aware'):
             self.walls['bottom'] = 1
         else:
             self.walls['bottom'] = 0
@@ -90,9 +93,9 @@ class PikeChasing(pike.Pike):
 
     def _change_condition(self):
         if self.new_condition[1] == 'Resting':
-            return pike_resting.PikeResting(self.pos, self.v,self.r,(255,0,0),self.saturation, self.acceleration_factor)
+            return pike_resting.PikeResting(self.app, self.pos, self.v,self.r,(255,0,0),self.saturation, self.acceleration_factor)
         if self.new_condition[1] == 'Died':
-            return pike_died.PikeDied(self.pos, self.v, self.r, (100, 0, 0))
+            return pike_died.PikeDied(self.app, self.pos, self.v, self.r, (100, 0, 0))
 
 
     def observe(self,other_entities):

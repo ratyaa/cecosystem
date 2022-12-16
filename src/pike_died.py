@@ -1,9 +1,10 @@
 import pike
-import app_config
 import coord
 
 class PikeDied(pike.Pike):
-    def __init__(self, pos, v, r, sprite):
+    def __init__(self, app, pos, v, r, sprite):
+        self.app = app
+        
         self.pos = pos
         self.v = v
         self.a = coord.Coord(0,0)
@@ -11,15 +12,18 @@ class PikeDied(pike.Pike):
         self.sprite = sprite
         self.start_condition = ['Entity', 'Died']
         self.new_condition = ['Entity', 'Died']
+        
+    def __config_get(self, variable):
+        return self.app.config.app_vars.get(variable).get_value()
 
     def _move(self):
         self.a -= self.v
-        self.v += self.a* app_config.dt
-        if (self.pos.x - app_config.WALL_AWARE <= 0) or (self.pos.x + self.r + app_config.WALL_AWARE >= app_config.WIDTH):
+        self.v += self.a* self.__config_get('dt')
+        if (self.pos.x - self.__config_get('wall_aware') <= 0) or (self.pos.x + self.r + self.__config_get('wall_aware') >= self.__config_get('width')):
             self.v.x = -self.v.x
-        if (self.pos.y - app_config.WALL_AWARE <= 0) or (self.pos.y + self.r + app_config.WALL_AWARE >= app_config.HEIGHT):
+        if (self.pos.y - self.__config_get('wall_aware') <= 0) or (self.pos.y + self.r + self.__config_get('wall_aware') >= self.__config_get('height')):
             self.v.y = -self.v.y
-        self.pos += self.v * app_config.dt
+        self.pos += self.v * self.__config_get('dt')
 
 
     def activity(self):

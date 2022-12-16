@@ -17,6 +17,9 @@ Options: nothing here yet :o\n\
         self.app = app
         self.args = args
 
+    def __config_get(self, variable):
+        return self.app.config.app_vars.get(variable).get_value()
+
     def _print_help(self):
         print(self.help_message)
 
@@ -24,7 +27,7 @@ Options: nothing here yet :o\n\
         if self.app.hidden:
             pygame.display.init()
             self.app.screen  = pygame.display.set_mode((
-                self.app.config.width,
-                self.app.config.height
+                self.__config_get('width'),
+                self.__config_get('height'),
             ))
         self.app.hidden = False
