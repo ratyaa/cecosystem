@@ -32,13 +32,13 @@ class AppVariable:
 
     def set_value(self, value):
         try:
-            value = self.convert_func(value, field_name='value')
+            value = self.convert_func(value)
         except ValueError:
             print("Failed due to inappropriate type of data.")
             return
             
         try:
-            self.__check_range()
+            self.__check_range(self.var_data, value)
         except ValueError:
             print(f"Getting out of range while trying to check `{self.name}` variable.")
             return

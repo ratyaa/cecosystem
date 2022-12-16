@@ -7,6 +7,7 @@ import uevent.raise_cmd as raise_cmd
 import uevent.list_cmd as list_cmd
 import uevent.pause_cmd as pause_cmd
 import uevent.resume_cmd as resume_cmd
+import uevent.var_cmd as var_cmd
 
 class EventHandler:
     def __init__(self, app):
@@ -21,6 +22,7 @@ class EventHandler:
             'list':		list_cmd.ListCommand,
             'pause':		pause_cmd.PauseCommand,
             'resume':		resume_cmd.ResumeCommand,
+            'var':		var_cmd.VarCommand,
         }
 
     async def run(self):

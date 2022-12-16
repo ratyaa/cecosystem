@@ -5,7 +5,7 @@ import coord
 class PerchResting(perch.Perch):
     def __init__(self, app, pos, v, r, sprite):
         self.app = app
-        
+        # super().__init__(app)
         self.pos = pos
         self.v = v
         self.r = r

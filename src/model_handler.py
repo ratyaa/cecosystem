@@ -13,12 +13,18 @@ class ModelHandler:
         self.app = app
         
         self.entities = []
+        self.starting_state = []
+        
         self.__init_entities()
 
     def __config_get(self, variable):
         return self.app.config.app_vars.get(variable).get_value()
 
     def __init_entities(self):
+        self.__init_perches()
+        self.__init_pikes()
+
+    def __init_perches(self):
         for i in range(45):
             self.entities.append(perch_resting.PerchResting(
                 self.app,
@@ -33,6 +39,8 @@ class ModelHandler:
                 randint(5, 10),
                 (0, 255, 0),
             ))
+            
+    def __init_pikes(self):
         for i in range(8):
             self.entities.append(pike_resting.PikeResting(
                 self.app,
@@ -47,6 +55,12 @@ class ModelHandler:
                 randint(15, 20),
                 (255, 0, 0)
             ))
+
+    # def self.__save_starting_state():
+    #     starting_state.clear()
+        
+    #     for entity in self.entities():
+    #         starting_state.append(entity)
         
     def draw(self):
         self.app.screen.fill((0, 0, 255))
