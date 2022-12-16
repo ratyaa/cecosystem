@@ -1,10 +1,10 @@
 width:
-  value: 1280
+  value: 800
   max_value: 1280
   min_value: 480
   
 height:
-  value: 720
+  value: 600
   max_value: 720
   min_value: 320
   
@@ -14,16 +14,16 @@ framerate:
   min_value: 60
   
 update_rate:
-  value: 1000
+  value: 500
   max_value: 2000
   min_value: 200
   
 wall_aware:
-  value: 100
+  value: 50
   max_value: 150
   min_value: 50
   
 dt:
-  value: 0.001
+  value: 0.005
   max_value: 10.0
   min_value: 0.000005
