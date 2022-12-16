@@ -45,10 +45,10 @@ class PikeResting(pike.Pike):
         self.a.x = 0
         self.a.y = 0
         self._move()
-        self.saturation -= 0.5
+        self.saturation -= self.__config_get('dt') * self.__config_get('pike_starvation_rate')
         if self.acceleration_factor <= 5000:
             self.acceleration_factor += 0.5
-        self.division += 1
+        self.division += self.__config_get('dt') * self.__config_get('pike_division_rate')
 
     def _check_walls(self):
         if self.pos.x < self.__config_get('wall_aware'):

@@ -18,15 +18,16 @@ class PerchResting(perch.Perch):
         self.new_hunter = self
         self.division = 0
         self.direction = 1
+        self.wall_acc_factor = 500
 
     def __config_get(self, variable):
         return self.app.config.app_vars.get(variable).get_value()
 
     def _move(self):
-        self.a.x += self.walls['left'] * (self.acceleration_factor) / (self.pos.x - self.r) \
-            + self.walls['right'] * (self.acceleration_factor) / (self.pos.x + self.r - self.__config_get('width'))
-        self.a.y += self.walls['top'] * (self.acceleration_factor) / (self.pos.y - self.r) \
-            + self.walls['bottom'] * (self.acceleration_factor) / (self.pos.y + self.r - self.__config_get('height'))
+        self.a.x += self.wall_acc_factor * self.walls['left'] * (self.acceleration_factor) / (self.pos.x - self.r) \
+            + self.wall_acc_factor * self.walls['right'] * (self.acceleration_factor) / (self.pos.x + self.r - self.__config_get('width'))
+        self.a.y += self.wall_acc_factor * self.walls['top'] * (self.acceleration_factor) / (self.pos.y - self.r) \
+            + self.wall_acc_factor * self.walls['bottom'] * (self.acceleration_factor) / (self.pos.y + self.r - self.__config_get('height'))
 
         self.a.x += 0.05 * self.acceleration_factor * self.v.x / (self.v.x ** 2 + self.v.y ** 2) ** 0.5
         self.a.y += 0.05 * self.acceleration_factor * self.v.y / (self.v.x ** 2 + self.v.y ** 2) ** 0.5
@@ -40,7 +41,7 @@ class PerchResting(perch.Perch):
         self.a.x = 0
         self.a.y = 0
         self._move()
-        self.division += 1
+        self.division += self.__config_get('dt') * self.__config_get('perch_division_rate')
 
     def _check_walls(self):
         if self.pos.x < self.__config_get('wall_aware'):

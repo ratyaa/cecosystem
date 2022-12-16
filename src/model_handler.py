@@ -13,7 +13,7 @@ class ModelHandler:
         self.app = app
         
         self.entities = []
-        self.starting_state = []
+        # self.starting_state = []
         
         self.__init_entities()
 

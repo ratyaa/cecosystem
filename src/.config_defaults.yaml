@@ -1,11 +1,11 @@
 width:
   value: 800
-  max_value: 1280
+  max_value: 1600
   min_value: 480
   
 height:
   value: 600
-  max_value: 720
+  max_value: 900
   min_value: 320
   
 framerate:
@@ -15,15 +15,30 @@ framerate:
   
 update_rate:
   value: 1000
-  max_value: 2000
+  max_value: 10000
   min_value: 200
   
 wall_aware:
   value: 100
-  max_value: 150
+  max_value: 300
   min_value: 50
   
 dt:
   value: 0.001
   max_value: 10.0
   min_value: 0.000005
+
+perch_division_rate:
+  value: 5000
+  max_value: 50000
+  min_value: 500
+
+pike_division_rate:
+  value: 500
+  max_value: 5000
+  min_value: 50
+
+pike_starvation_rate:
+  value: 500
+  max_value: 5000
+  min_value: 50
